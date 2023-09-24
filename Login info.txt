@@ -2,3 +2,7 @@ Bistro Boss Website Login Mail and Password
 ===========================================
 Email: bistroboss@gmail.com
 Password: Bistro@123
+
+
+as@gmail.com
+Bistro@123
