@@ -4,6 +4,8 @@ import { AuthContext } from '../../Provider/AuthProvider';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import Swal from 'sweetalert2';
+import SocialLogin from '../Shared/socialLogin/socialLogin';
+
 
 const Login = () => {
   
@@ -14,7 +16,7 @@ const Login = () => {
     const location = useLocation();
 
     const from = location.state?.from?.pathname || "/";
-    console.log(from)
+ 
 
     useEffect(() => {
         loadCaptchaEnginge(6); 
@@ -91,11 +93,14 @@ const Login = () => {
               <div className="form-control mt-6">
                 <input disabled={disabled} className="btn btn-primary" type="submit" value="Login" />
               </div>
+              <p><small>New Here? <Link to={'/signup'}>Create an account</Link></small></p>
+              <SocialLogin></SocialLogin>
               
             </form>
-            <p><small>New Here? <Link to={'/signup'}>Create an account</Link></small></p>
+           
           </div>
         </div>
+      
       </div>
        </>
     );
