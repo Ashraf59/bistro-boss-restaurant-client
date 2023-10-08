@@ -1,13 +1,14 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { FaBook, FaCalendar, FaHome, FaShoppingCart, FaUsers, FaUtensils, FaWallet } from 'react-icons/fa';
 import useCart from "../hooks/useCart";
+import useAdmin from "../hooks/useAdmin";
 
 
 const Dashboard = () => {
   const [cart] = useCart();
 
   //load data from server to have dynamic isAdmin based on Data
-  const isAdmin = true;
+  const isAdmin = useAdmin();
     return (
         <div className="drawer lg:drawer-open">
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
@@ -22,7 +23,7 @@ const Dashboard = () => {
            {
             isAdmin? <>
                   <li><NavLink to="/dashboard/home"><FaHome></FaHome>Admin Home</NavLink></li>
-          <li><NavLink to="/dashboard/reservations"><FaUtensils></FaUtensils>Add items</NavLink></li>
+          <li><NavLink to="/dashboard/additem"><FaUtensils></FaUtensils>Add items</NavLink></li>
           <li><NavLink to="/dashboard/payment"><FaWallet></FaWallet>Manage Items</NavLink></li>
           <li><NavLink to="/dashboard/payment"><FaBook></FaBook>Manage Bookings</NavLink></li>
           <li><NavLink to="/dashboard/allusers"><FaUsers></FaUsers>All Users</NavLink></li>

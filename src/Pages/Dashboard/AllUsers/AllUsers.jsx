@@ -6,19 +6,29 @@ import Swal from "sweetalert2";
 
 const AllUsers = () => {
   const token = localStorage.getItem('access token');
-    const {data: users = [], refetch} = useQuery(['users'], async() => {
-        const res = await fetch('http://localhost:5000/users', {
-          headers: {
-            authorization: `bearer ${token}`
-          }
-        })
-        return res.json();
-       
-    })
+  console.log(token)
+ const {data: users = [], refetch} = useQuery({
+  queryKey: ['users'],
+  queryFn: async() => {
+    const res = await fetch('http://localhost:5000/users',{
+      headers:{
+        authorization: `bearer ${token}`
+      }
+    });
+    const data = await res.json();
+    console.log(data)
+    return data;
    
+  } 
+ 
+ })
+
     const handleMakeAdmin = user => {
         fetch(`http://localhost:5000/users/admin/${user._id}`,{
-            method: 'PATCH'
+            method: 'PATCH',
+            headers:{
+              authorization: `bearer ${token}`
+          }
         })
         
         .then(res => res.json())
@@ -62,7 +72,7 @@ const AllUsers = () => {
     </thead>
     <tbody>
  
-        {users.map((user, index) =>  <tr key={user._id}>
+        {users?.map((user, index) =>  <tr key={user._id}>
          
         <th>{index + 1}</th>
         <td>{user.name}</td>
