@@ -1,3 +1,4 @@
+import Swal from "sweetalert2";
 import SectionTitle from "../../../components/SectionTitle/SectionTitle";
 import { useForm } from 'react-hook-form';
 
@@ -5,7 +6,8 @@ const img_hosting_token = import.meta.env.VITE_image_Upload_Token;
 
 const AddItem = () => {
 
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, reset } = useForm();
+  const token = localStorage.getItem('access token');
   const img_hosting_url = `https://api.imgbb.com/1/upload?key=${img_hosting_token}`
 
   const onSubmit = data => {
@@ -23,12 +25,35 @@ const AddItem = () => {
         const {name, price, category, recipe} = data;
         const newItem = {name, price: parseFloat(price), category, recipe, image:imgURL}
         console.log(newItem)
-        console.log(data)
+        fetch("http://localhost:5000/menu", {
+          method: 'POST',
+          headers: {
+            'content-type' : 'application/json',
+            authorization: `bearer ${token}`
+          },
+          body: JSON.stringify(newItem)
+        })
+        .then(res => res.json())
+        .then(result => {
+          console.log(result)
+          if(result.insertedId){
+            reset();
+            Swal.fire({
+              position: 'top-end',
+              icon: 'success',
+              title: 'Successfully Item saved in database',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          }
+         
+        })
+
       }
     })
    
   };
-  console.log(errors);
+ 
   
 
     return (
