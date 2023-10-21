@@ -1,9 +1,47 @@
+import { FaTrashAlt } from "react-icons/fa";
 import SectionTitle from "../../../components/SectionTitle/SectionTitle";
 import useMenu from "../../../hooks/useMenu";
+import Swal from "sweetalert2";
 
 
 const ManageItems = () => {
-    const [menu] = useMenu();
+    const [menu, , refetch] = useMenu();
+    const token = localStorage.getItem('access token');
+
+    const handleDelete = item => {
+      console.log(item._id)
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          fetch(`http://localhost:5000/menu/${item._id}`, {
+            method: 'DELETE',
+            headers:{
+              authorization: `bearer ${token}`
+            }
+          })
+          .then(res => res.json())
+          .then(data => {
+            console.log(data)
+            if(data.deletedCount > 0){
+              Swal.fire(
+                'Deleted!',
+                'Your file has been deleted.',
+                'success'
+              )
+              refetch();
+         
+            }
+          })
+        }
+      })
+    }
     return (
         <div className="w-full">
             <SectionTitle heading={"Manage All Items"} subHeading={"Hurry Up"}></SectionTitle>
@@ -12,26 +50,20 @@ const ManageItems = () => {
   <table className="table">
     {/* head */}
     <thead>
-      <tr>
-        <th>
-          <label>
-            <input type="checkbox" className="checkbox" />
-          </label>
-        </th>
+      <tr className="text-center">
+        <th>Serial No.</th>
         <th>Name</th>
-        <th>Job</th>
-        <th>Favorite Color</th>
+        <th>Category</th>
+        <th>Price</th>
         <th>Update</th>
         <th>Delete</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody className="text-center">
       {
-        menu.map(item => <tr key={item._id}>
+        menu.map((item, index) => <tr key={item._id}>
             <th>
-              <label>
-                <input type="checkbox" className="checkbox" />
-              </label>
+             {index + 1}
             </th>
             <td>
               <div className="flex items-center space-x-3">
@@ -41,20 +73,20 @@ const ManageItems = () => {
                   </div>
                 </div>
                 <div>
-                  <div className="font-bold">Hart Hagerty</div>
+                  <div className="font-bold">{item.name}</div>
                
                 </div>
               </div>
             </td>
-            <td>
-              Zemlak, Daniel and Leannon
+            <td className="">
+             {item.category}
             </td>
-            <td>Purple</td>
+            <td>{item.price}</td>
             <td>
-              <button className="btn btn-ghost btn-xs">details</button>
+             <h2>dfdf</h2>
             </td>
             <td>
-              <button className="btn btn-ghost btn-xs">details</button>
+            <button onClick={() => handleDelete(item)} className="btn btn-ghost btn-sm bg-red-600 text-white"><FaTrashAlt></FaTrashAlt></button>
             </td>
           </tr>)
       }
